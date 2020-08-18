@@ -13,6 +13,7 @@ mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true })
 app.set('view engine', 'ejs')
 
 app.use(express.static('public'))
+app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'))
 
 // app.get('/add', (req, res) => {
@@ -66,6 +67,41 @@ app.get('/blog/:id', (req, res) => {
             })
         })
 
+})
+
+app.get('/admin', (req, res) => {
+    Blog.find().sort({ createdAt: -1 })
+        .then((result) => {
+            res.render('admin', { title: 'Admin', blogs: result })
+        })
+        .catch((err) => console.log(err))
+})
+
+app.get('/admin/add', (req, res) => {
+    res.render('add', { title: 'yeni yazi' })
+})
+
+app.post('/admin/add', (req, res) => {
+    const blog = new Blog(req.body)
+
+    blog.save()
+        .then((result) => {
+            res.redirect('/')
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+})
+
+app.delete('/admin/delete/:id', (req, res) => {
+    const id = req.params.id
+    Blog.findByIdAndDelete(id)
+        .then((result) => {
+            res.json({ link: '/admin' })
+        })
+        .catch((err) => {
+            console.log(err)
+        })
 })
 
 app.get('/about', (req, res) => {
