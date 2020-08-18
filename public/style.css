@@ -44,3 +44,14 @@ form input{
     margin-top: 10px;
     padding: 5px 10px;
 }
+
+a{
+    color:whitesmoke;
+    
+}
+a:hover{
+    color: gold;
+}
+a:active{
+    color: aqua;
+}
